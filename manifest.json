@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Meteo - Modern Weather",
-  "description": "Modern and professional weather extension with dynamic backgrounds.",
-  "version": "1.0",
+  "name": "SkyCast - Premium Weather Extension",
+  "description": "A premium, glassmorphism-styled weather Chrome extension with dynamic physics animations and smart auto-location.",
+  "version": "2.0",
   "permissions": [
     "storage",
     "geolocation",
@@ -13,7 +13,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Weather",
+    "default_title": "SkyCast",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
