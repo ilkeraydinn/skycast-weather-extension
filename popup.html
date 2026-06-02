@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meteo - Modern Weather</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Dynamic Background Canvas -->
+  <canvas id="weather-canvas"></canvas>
+  <div id="background-overlay" class="background-overlay"></div>
+  
+  <div class="app-container">
+    <header class="header">
+      <div class="search-container">
+        <input type="text" id="search-input" data-i18n-placeholder="searchPlaceholder" placeholder="Şehir veya ilçe ara..." autocomplete="off" spellcheck="false">
+        <div id="autocomplete-results" class="autocomplete-results glass-panel hidden"></div>
+      </div>
+      <button id="location-btn" class="icon-btn" title="Konumumu Bul" data-i18n-title="locationTitle">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+      </button>
+      <button id="settings-btn" class="icon-btn" title="Ayarlar" data-i18n-title="settingsTitle">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </button>
+    </header>
+
+    <main id="main-content">
+      <div id="loading-state" class="skeleton-container">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-temp"></div>
+        <div class="skeleton skeleton-details"></div>
+        <div class="skeleton skeleton-forecast"></div>
+      </div>
+      
+      <div id="weather-content" class="hidden">
+        <div class="current-weather glass-panel">
+          <div class="location-header">
+            <h1 id="city-name">--</h1>
+            <button id="favorite-btn" class="icon-btn fav-btn" title="Favorilere Ekle" data-i18n-title="addFavorite">
+              <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+          </div>
+          
+          <div id="smart-summary" class="smart-summary hidden">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z"></path></svg>
+            <span id="smart-summary-text">--</span>
+          </div>
+          
+          <div class="temp-display">
+            <div id="weather-icon-main" class="weather-icon-large"></div>
+            <div class="temp-text">
+              <span id="current-temp">--</span><span class="unit">°</span>
+            </div>
+            <div id="weather-desc" class="weather-desc">--</div>
+          </div>
+          
+          <div class="weather-details">
+            <div class="detail-item">
+              <span class="label" data-i18n="feelsLike">Hissedilen</span>
+              <span id="feels-like" class="value">--°</span>
+            </div>
+            <div class="detail-item">
+              <span class="label" data-i18n="humidity">Nem</span>
+              <span id="humidity" class="value">--%</span>
+            </div>
+            <div class="detail-item">
+              <span class="label" data-i18n="wind">Rüzgar</span>
+              <span id="wind-speed" class="value">--</span>
+            </div>
+          </div>
+          
+          <div class="sun-times">
+            <div class="sun-item">
+              <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M17 18a5 5 0 0 0-10 0"></path><line x1="12" y1="2" x2="12" y2="9"></line><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"></line><line x1="1" y1="18" x2="3" y2="18"></line><line x1="21" y1="18" x2="23" y2="18"></line><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"></line><line x1="23" y1="22" x2="1" y2="22"></line><polyline points="8 6 12 2 16 6"></polyline></svg>
+              <span id="sunrise-time">--:--</span>
+            </div>
+            <div class="sun-item">
+              <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M17 18a5 5 0 0 0-10 0"></path><line x1="12" y1="9" x2="12" y2="2"></line><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"></line><line x1="1" y1="18" x2="3" y2="18"></line><line x1="21" y1="18" x2="23" y2="18"></line><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"></line><line x1="23" y1="22" x2="1" y2="22"></line><polyline points="16 5 12 9 8 5"></polyline></svg>
+              <span id="sunset-time">--:--</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hourly-section glass-panel">
+          <div class="section-title" data-i18n="hourlyTitle">Saatlik Tahmin</div>
+          <div class="hourly-container">
+            <svg id="hourly-curve" class="hourly-curve"></svg>
+            <div id="hourly-list" class="hourly-list">
+              <!-- JS will populate this -->
+            </div>
+          </div>
+        </div>
+
+        <div class="forecast-section glass-panel">
+          <div class="section-title" data-i18n="forecastTitle">5 Günlük Tahmin</div>
+          <div id="forecast-list" class="forecast-list">
+            <!-- JS will populate this -->
+          </div>
+        </div>
+        
+        <div id="favorites-section" class="favorites-section glass-panel hidden">
+          <div class="section-title" data-i18n="favoritesTitle">Favori Şehirler</div>
+          <div id="favorites-list" class="favorites-list">
+            <!-- JS will populate -->
+          </div>
+        </div>
+      </div>
+      
+      <div id="error-state" class="error-state hidden glass-panel">
+        <svg viewBox="0 0 24 24" width="48" height="48" stroke="var(--text-color)" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <p id="error-message">Bir hata oluştu.</p>
+        <button id="retry-btn" class="glass-btn" data-i18n="retryBtn">Tekrar Dene</button>
+      </div>
+    </main>
+    
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+      <div class="modal-content glass-panel">
+        <div class="modal-header">
+          <h2 data-i18n="settingsTitle">Ayarlar</h2>
+          <button id="close-settings" class="icon-btn">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        <div class="settings-body">
+          <div class="settings-group">
+            <label data-i18n="unitLabel">Sıcaklık Birimi</label>
+            <select id="unit-select" class="glass-select">
+              <option value="celsius">Celsius (°C)</option>
+              <option value="fahrenheit">Fahrenheit (°F)</option>
+            </select>
+          </div>
+          <div class="settings-group">
+            <label data-i18n="langLabel">Dil (Language)</label>
+            <select id="lang-select" class="glass-select">
+              <option value="tr">Türkçe</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <div class="settings-group">
+            <label class="toggle-label">
+              <span data-i18n="autoLocLabel">Otomatik Konum (GPS)</span>
+              <div class="toggle-switch">
+                <input type="checkbox" id="auto-location" checked>
+                <span class="toggle-slider"></span>
+              </div>
+            </label>
+          </div>
+          <div class="app-version">V2.0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
