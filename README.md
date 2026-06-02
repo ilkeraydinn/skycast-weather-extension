@@ -6,7 +6,8 @@ A beautiful, highly interactive, and privacy-friendly Chrome Extension that deli
 ![Manifest](https://img.shields.io/badge/Manifest-V3-orange.svg)
 
 <div align="center">
-  <img src="screenshot.png" alt="SkyCast Weather Extension Screenshot" width="400"/>
+  <img src="screenshot.png" alt="SkyCast Current Weather" width="400" style="margin-right: 10px; border-radius: 8px;"/>
+  <img src="screenshot2.png" alt="SkyCast Forecast" width="400" style="border-radius: 8px;"/>
 </div>
 
 ## ✨ Features
