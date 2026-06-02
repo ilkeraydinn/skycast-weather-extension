@@ -10,7 +10,7 @@ export const WeatherAPI = {
     const cachedData = await Storage.get(cacheKey);
     const cachedTime = await Storage.get(cacheTimeKey);
     
-    // Yalnızca hourly verisi olan yeni formatlı önbelleği kabul et
+    // Only accept new format cache that contains hourly data
     if (cachedData && cachedTime && (Date.now() - cachedTime < CACHE_DURATION) && cachedData.hourly) {
       return cachedData;
     }
